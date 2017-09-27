@@ -206,7 +206,7 @@ export class Costanera
 		
 			// this.game.physics.arcade.collide(this.player, platforms);
 		
-			//this.getGame().physics.arcade.collide(this.getBeer(), this.getPersonaje(), this.collisionHandler, null, this);
+			//this.getGame().physics.arcade.collide(this.getLogo(), this.getPersonaje(), this.collisionHandler, null, this);
  			this.getGame().physics.arcade.collide(this.getEmitter(),this.getPersonaje(),this.collisionHandler,null, this);
 			this.getPersonaje().body.velocity.x = 0;
 
