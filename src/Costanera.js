@@ -126,11 +126,11 @@ var Costanera = /** @class */ (function () {
         //Cerveza
         this.setLogo(this.getGame().add.sprite(300, 50, 'logo'));
         this.getLogo().name = 'logo';
-        //this.getObstaculo().body.gravity.y = 500;
+        //this.getlogo().body.gravity.y = 500;
         this.getGame().physics.enable(this.getLogo(), Phaser.Physics.ARCADE);
         logo.inputEnabled = true;
         logo.events.onInputDown.add(this.listener, this);
-        //this.getObstaculo().body.velocity.y = 10;
+        //this.getlogo().body.velocity.y = 10;
         //  This adjusts the collision body size.
         //  220x10 is the new width/height.
         //  See the offset bounding box for another example.

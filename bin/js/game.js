@@ -17,8 +17,8 @@ var Costanera = /** @class */ (function () {
             getAncho: this.getAncho,
             setAlto: this.setAlto,
             getAlto: this.getAlto,
-            setObstaculo: this.setObstaculo,
-            getObstaculo: this.getObstaculo,
+            setlogo: this.setLogo,
+            getlogo: this.getLogo,
             setPersonaje: this.setPersonaje,
             getPersonaje: this.getPersonaje,
             setCursores: this.setCursores,
@@ -76,11 +76,11 @@ var Costanera = /** @class */ (function () {
     Costanera.prototype.setDobleSalto = function (valor) {
         this.doblesalto = valor;
     };
-    Costanera.prototype.setObstaculo = function (value) {
-        this.obstaculo = value;
+    Costanera.prototype.setLogo = function (value) {
+        this.logo = value;
     };
-    Costanera.prototype.getObstaculo = function () {
-        return this.obstaculo;
+    Costanera.prototype.getLogo = function () {
+        return this.logo;
     };
     Costanera.prototype.setEmitter = function (value) {
         this.emitter = value;
@@ -121,9 +121,9 @@ var Costanera = /** @class */ (function () {
         this.getPersonaje().body.gravity.y = 500;
         this.setCursores(this.getGame().input.keyboard.createCursorKeys());
         this.setSaltarBtn(this.getGame().input.keyboard.addKey(Phaser.Keyboard.SPACEBAR));
-        //obstaculo
+        //logo
         var logo = this.getGame().add.sprite(null, null, 'logo');
-        this.setObstaculo(logo);
+        this.setLogo(logo);
         logo.name = 'logo';
         //this.getLogo().body.gravity.y = 500;
         this.getGame().physics.enable(this.getLogo(), Phaser.Physics.ARCADE);
@@ -138,7 +138,7 @@ var Costanera = /** @class */ (function () {
         var emitter = this.getGame().add.emitter(this.getGame().world.centerX, 5, 5);
         this.setEmitter(emitter);
         this.getEmitter().width = this.getGame().world.width;
-        this.getEmitter().makeParticles('obstaculo', null, 1, true);
+        this.getEmitter().makeParticles('logo', null, 1, true);
         // emitter.minParticleScale = 0.1;
         // emitter.maxParticleScale = 0.5;
         this.getEmitter().setYSpeed(100, 200);
@@ -147,7 +147,7 @@ var Costanera = /** @class */ (function () {
     };
     Costanera.prototype.update = function () {
         // this.game.physics.arcade.collide(this.player, platforms);
-        //this.getGame().physics.arcade.collide(this.getObstaculo(), this.getPersonaje(), this.collisionHandler, null, this);
+        //this.getGame().physics.arcade.collide(this.getlogo(), this.getPersonaje(), this.collisionHandler, null, this);
         this.getGame().physics.arcade.collide(this.getEmitter(), this.getPersonaje(), this.collisionHandler, null, this);
         this.getPersonaje().body.velocity.x = 0;
         if (this.getCursores().left.isDown) {
