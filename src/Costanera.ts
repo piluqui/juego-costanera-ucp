@@ -167,8 +167,8 @@ export class Costanera
 		
 		this.setCursores(this.getGame().input.keyboard.createCursorKeys());
 		this.setSaltarBtn(this.getGame().input.keyboard.addKey(Phaser.Keyboard.SPACEBAR));
-	//Cerveza
-		this.setLogo(this.getGame().add.sprite(300, 50, 'logo'));
+	//Logo
+		this.setLogo(this.getGame().add.sprite(30, 50, 'logo'));
 		this.getLogo().name = 'logo';
 	//this.getLogo().body.gravity.y = 500;
 	
