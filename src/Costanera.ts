@@ -40,4 +40,7 @@ class Costanera
 // when the page has finished loading, create our game
 window.onload = () => {
 	var game = new Costanera(1350,550);
+
+	//comentario;
+	
 }
