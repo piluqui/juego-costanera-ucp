@@ -92,8 +92,8 @@ var Costanera = /** @class */ (function () {
         // add our logo image to the assets class under the
         // key 'logo'. We're also setting the background colour
         // so it's the same as the background colour in the image
-        this.getGame().load.image('obstaculo', 'assets/birra.png');
-        this.getGame().load.image('player', 'assets/homero2.png');
+        this.getGame().load.image('logo', 'assets/logo.png');
+        this.getGame().load.image('player', 'assets/cat.png');
         this.getGame().load.image('costanera', "assets/costanera.jpg");
         //Agregamos un comentario para probar subir cambios a GIT desde el editor
         //hacemos un cambio en el archivo
@@ -122,18 +122,18 @@ var Costanera = /** @class */ (function () {
         this.setCursores(this.getGame().input.keyboard.createCursorKeys());
         this.setSaltarBtn(this.getGame().input.keyboard.addKey(Phaser.Keyboard.SPACEBAR));
         //obstaculo
-        var obstaculo = this.getGame().add.sprite(null, null, 'obstaculo');
-        this.setObstaculo(obstaculo);
-        obstaculo.name = 'obstaculo';
-        //this.getObstaculo().body.gravity.y = 500;
-        this.getGame().physics.enable(this.getObstaculo(), Phaser.Physics.ARCADE);
+        var logo = this.getGame().add.sprite(null, null, 'logo');
+        this.setObstaculo(logo);
+        logo.name = 'logo';
+        //this.getLogo().body.gravity.y = 500;
+        this.getGame().physics.enable(this.getLogo(), Phaser.Physics.ARCADE);
         logo.inputEnabled = true;
         logo.events.onInputDown.add(this.listener, this);
-        //this.getObstaculo().body.velocity.y = 10;
+        //this.getLogo().body.velocity.y = 10;
         //  This adjusts the collision body size.
         //  220x10 is the new width/height.
         //  See the offset bounding box for another example.
-        this.getObstaculo().body.setSize(10, 10, 0, 0);
+        this.getLogo().body.setSize(10, 10, 0, 0);
         //emitter
         var emitter = this.getGame().add.emitter(this.getGame().world.centerX, 5, 5);
         this.setEmitter(emitter);
