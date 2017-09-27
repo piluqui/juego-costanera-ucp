@@ -71,12 +71,12 @@ export class Costanera
 	setDobleSalto(valor){
 		this.doblesalto=valor;
 	}
-	setBeer(value:Beer){
-		this.beer = value;
+	setLogo(value:Logo){
+		this.logo = value;
 	 }
 
-	getBeer ():Beer{
-		return this.beer;
+	getLogo ():Logo{
+		return this.logo;
 	}
 	
 	setEmitter(value: Phaser.Particles.Arcade.Emitter){
@@ -106,8 +106,8 @@ export class Costanera
 			getAncho: this.getAncho,
 			setAlto: this.setAlto,
 			getAlto: this.getAlto,
-			setBeer: this.setBeer,
-			getBeer: this.getBeer,
+			setLogo: this.setLogo,
+			getLogo: this.getLogo,
 			setPersonaje: this.setPersonaje,
 			getPersonaje: this.getPersonaje,
 			setCursores: this.setCursores,
@@ -168,13 +168,13 @@ export class Costanera
 		this.setCursores(this.getGame().input.keyboard.createCursorKeys());
 		this.setSaltarBtn(this.getGame().input.keyboard.addKey(Phaser.Keyboard.SPACEBAR));
 	//Cerveza
-		this.setBeer(this.getGame().add.sprite(300, 50, 'logo'));
-		this.getBeer().name = 'logo';
+		this.setLogo(this.getGame().add.sprite(300, 50, 'logo'));
+		this.getLogo().name = 'logo';
 	//this.getObstaculo().body.gravity.y = 500;
 	
 	
 	
-	this.getGame().physics.enable(this.getBeer(),Phaser.Physics.ARCADE);
+	this.getGame().physics.enable(this.getLogo(),Phaser.Physics.ARCADE);
 	
 	logo.inputEnabled = true;
 	logo.events.onInputDown.add(this.listener, this);
@@ -183,7 +183,7 @@ export class Costanera
 	//  This adjusts the collision body size.
 	//  220x10 is the new width/height.
 	//  See the offset bounding box for another example.
-	this.getBeer().body.setSize(10, 10, 0, 0);
+	this.getLogo().body.setSize(10, 10, 0, 0);
 	
 	//emitter
 	var emitter = this.getGame().add.emitter(this.getGame().world.centerX, 5, 5);
