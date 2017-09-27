@@ -123,14 +123,14 @@ var Costanera = /** @class */ (function () {
         this.getPersonaje().body.gravity.y = 500;
         this.setCursores(this.getGame().input.keyboard.createCursorKeys());
         this.setSaltarBtn(this.getGame().input.keyboard.addKey(Phaser.Keyboard.SPACEBAR));
-        //Cerveza
+        //Logo
         this.setLogo(this.getGame().add.sprite(300, 50, 'logo'));
         this.getLogo().name = 'logo';
-        //this.getlogo().body.gravity.y = 500;
+        //this.getLogo().body.gravity.y = 500;
         this.getGame().physics.enable(this.getLogo(), Phaser.Physics.ARCADE);
         logo.inputEnabled = true;
         logo.events.onInputDown.add(this.listener, this);
-        //this.getlogo().body.velocity.y = 10;
+        //this.getLogo().body.velocity.y = 10;
         //  This adjusts the collision body size.
         //  220x10 is the new width/height.
         //  See the offset bounding box for another example.
