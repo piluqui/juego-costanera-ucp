@@ -17,8 +17,8 @@ var Costanera = /** @class */ (function () {
             getAncho: this.getAncho,
             setAlto: this.setAlto,
             getAlto: this.getAlto,
-            setlogo: this.setLogo,
-            getlogo: this.getLogo,
+            setLogo: this.setLogo,
+            getLogo: this.getLogo,
             setPersonaje: this.setPersonaje,
             getPersonaje: this.getPersonaje,
             setCursores: this.setCursores,
@@ -176,7 +176,7 @@ var Costanera = /** @class */ (function () {
         // this.getGame().stage.backgroundColor = '#992d2d';
         // this.getPersonaje().body.velocity.y = -800;
         objetos.kill();
-        personaje.kill();
+        //personaje.kill();
         personaje.revive();
     };
     Costanera.prototype.listener = function () {
