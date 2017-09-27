@@ -170,7 +170,7 @@ export class Costanera
 	//Cerveza
 		this.setLogo(this.getGame().add.sprite(300, 50, 'logo'));
 		this.getLogo().name = 'logo';
-	//this.getObstaculo().body.gravity.y = 500;
+	//this.getLogo().body.gravity.y = 500;
 	
 	
 	
@@ -178,7 +178,7 @@ export class Costanera
 	
 	logo.inputEnabled = true;
 	logo.events.onInputDown.add(this.listener, this);
-	//this.getObstaculo().body.velocity.y = 10;
+	//this.getLogo().body.velocity.y = 10;
 	
 	//  This adjusts the collision body size.
 	//  220x10 is the new width/height.
