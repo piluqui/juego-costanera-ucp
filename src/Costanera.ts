@@ -1,10 +1,13 @@
 /// <reference path="../tsDefinitions/phaser.d.ts" />
+/// <reference path="./Personaje.ts" />
+/// <reference path="./Comida.ts" />
+/// <reference path="./Bonus.ts" />
 
-import {Personaje} from './Personaje'
-import {Logo} from './Logo'
 
-export class Costanera
-{
+module JuegoCostanera {
+
+export class Costanera {
+	
 	game:Phaser.Game;
 	ancho: number;
 	alto:number;
@@ -14,6 +17,8 @@ export class Costanera
 	saltarBtn:Phaser.Key;
 	doblesalto:number;
 	emitter: Phaser.Particles.Arcade.Emitter;
+	puntos: number;
+	
 //--------------------setters y getters --------------------------------------
 	
 	
@@ -264,4 +269,6 @@ export class Costanera
 // when the page has finished loading, create our game
 window.onload = () => {
 	var game = new Costanera(window.innerWidth,window.innerHeight);
+}
+
 }

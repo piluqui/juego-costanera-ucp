@@ -1,4 +1,4 @@
-"use strict";
+/// <reference path="./Bonus.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -9,13 +9,14 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-var Bonus_1 = require("./Bonus");
-var Logo = /** @class */ (function (_super) {
-    __extends(Logo, _super);
-    function Logo() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return Logo;
-}(Bonus_1.Bonus));
-exports.Logo = Logo;
+var JuegoCostanera;
+(function (JuegoCostanera) {
+    var Logo = /** @class */ (function (_super) {
+        __extends(Logo, _super);
+        function Logo() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        return Logo;
+    }(JuegoCostanera.Bonus));
+    JuegoCostanera.Logo = Logo;
+})(JuegoCostanera || (JuegoCostanera = {}));

@@ -1,4 +1,4 @@
-"use strict";
+/// <reference path="./Bonus.ts" />
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -9,12 +9,14 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-var Bonus = /** @class */ (function (_super) {
-    __extends(Bonus, _super);
-    function Bonus() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return Bonus;
-}(Phaser.Sprite));
-exports.Bonus = Bonus;
+var JuegoCostanera;
+(function (JuegoCostanera) {
+    var Comida = /** @class */ (function (_super) {
+        __extends(Comida, _super);
+        function Comida() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        return Comida;
+    }(JuegoCostanera.Bonus));
+    JuegoCostanera.Comida = Comida;
+})(JuegoCostanera || (JuegoCostanera = {}));
