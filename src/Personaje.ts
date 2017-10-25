@@ -14,7 +14,7 @@ export class Personaje extends Phaser.Sprite{
         game.physics.enable(this,Phaser.Physics.ARCADE);
         this.body.collideWorldBounds = true;
         this.body.gravity.y = 500;
-        this.body.setSize(650, 705);
+        this.body.setSize(780, 705);
       //this.animations.add('left', [0, 1, 2, 3], 10, true);
       //this.animations.add('turn', [4], 20, true);
        // this.animations.add('right', [5, 6, 7, 8], 10, true);
