@@ -13,9 +13,42 @@ var JuegoCostanera;
 (function (JuegoCostanera) {
     var Personaje = /** @class */ (function (_super) {
         __extends(Personaje, _super);
-        function Personaje() {
-            return _super !== null && _super.apply(this, arguments) || this;
+        //orientacion: string;
+        function Personaje(game, x, y, frame) {
+            var _this = _super.call(this, game, x, y, frame) || this;
+            _this.height = 200;
+            _this.width = 100;
+            game.physics.enable(_this, Phaser.Physics.ARCADE);
+            _this.body.collideWorldBounds = true;
+            _this.body.gravity.y = 500;
+            _this.body.setSize(650, 705);
+            //this.animations.add('left', [0, 1, 2, 3], 10, true);
+            //this.animations.add('turn', [4], 20, true);
+            // this.animations.add('right', [5, 6, 7, 8], 10, true);
+            //this.setOrientacion('left');  
+            _this.setPuntos(0);
+            _this.setVidas(3);
+            game.add.existing(_this);
+            return _this;
         }
+        Personaje.prototype.getPuntos = function () {
+            return this.puntos;
+        };
+        Personaje.prototype.setPuntos = function (value) {
+            this.puntos = value;
+        };
+        //setOrientacion(value: string){
+        // this.orientacion = value;
+        //}
+        //getOrientacion(){
+        // return this.orientacion;
+        //}
+        Personaje.prototype.getVidas = function () {
+            return this.vidas;
+        };
+        Personaje.prototype.setVidas = function (value) {
+            this.vidas = value;
+        };
         return Personaje;
     }(Phaser.Sprite));
     JuegoCostanera.Personaje = Personaje;

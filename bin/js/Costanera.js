@@ -1,17 +1,10 @@
 /// <reference path="../tsDefinitions/phaser.d.ts" />
 /// <reference path="./Personaje.ts" />
-/// <reference path="./Comida.ts" />
 /// <reference path="./Bonus.ts" />
 var JuegoCostanera;
 (function (JuegoCostanera) {
     var Costanera = /** @class */ (function () {
         function Costanera(ancho, alto) {
-            // create our phaser game
-            // 800 - width
-            // 600 - height
-            // Phaser.AUTO - determine the renderer automatically (canvas, webgl)
-            // 'content' - the name of the container to add our game to
-            // { preload:this.preload, create:this.create} - functions to call for our states
             this.setGame(new Phaser.Game(ancho, alto, Phaser.CANVAS, 'content', {
                 preload: this.preload,
                 create: this.create,
@@ -26,6 +19,8 @@ var JuegoCostanera;
                 getLogo: this.getLogo,
                 setPersonaje: this.setPersonaje,
                 getPersonaje: this.getPersonaje,
+                setBonus: this.setBonus,
+                getBonus: this.getBonus,
                 setCursores: this.setCursores,
                 getCursores: this.getCursores,
                 setSaltarBtn: this.setSaltarBtn,
@@ -34,8 +29,15 @@ var JuegoCostanera;
                 setDobleSalto: this.setDobleSalto,
                 getEmitter: this.getEmitter,
                 setEmitter: this.setEmitter,
+                getEmitterBonus: this.getEmitterBonus,
+                setEmitterBonus: this.setEmitterBonus,
                 collisionHandler: this.collisionHandler,
-                listener: this.listener
+                collisionBonus: this.collisionBonus,
+                getTextoPuntos: this.getTextoPuntos,
+                setTextoPuntos: this.setTextoPuntos,
+                getTextoVidas: this.getTextoVidas,
+                setTextoVidas: this.setTextoVidas
+                //listener: this.listener
             }));
         }
         //--------------------setters y getters --------------------------------------
@@ -87,19 +89,42 @@ var JuegoCostanera;
         Costanera.prototype.getLogo = function () {
             return this.logo;
         };
+        Costanera.prototype.setBonus = function (value) {
+            this.bonus = value;
+        };
+        Costanera.prototype.getBonus = function () {
+            return this.bonus;
+        };
         Costanera.prototype.setEmitter = function (value) {
             this.emitter = value;
         };
         Costanera.prototype.getEmitter = function () {
             return this.emitter;
         };
+        Costanera.prototype.setEmitterBonus = function (value) {
+            this.emitterBonus = value;
+        };
+        Costanera.prototype.getEmitterBonus = function () {
+            return this.emitterBonus;
+        };
+        Costanera.prototype.getTextoPuntos = function () {
+            return this.textoPuntos;
+        };
+        Costanera.prototype.setTextoPuntos = function (value) {
+            this.textoPuntos = value;
+        };
+        Costanera.prototype.getTextoVidas = function () {
+            return this.textoVidas;
+        };
+        Costanera.prototype.setTextoVidas = function (value) {
+            this.textoVidas = value;
+        };
         Costanera.prototype.preload = function () {
-            // add our logo image to the assets class under the
-            // key 'logo'. We're also setting the background colour
-            // so it's the same as the background colour in the image
             this.getGame().load.image('logo', 'assets/logo.png');
+            this.getGame().load.image('bonus', 'assets/hamburger.png');
             this.getGame().load.image('player', 'assets/cat.png');
-            this.getGame().load.image('costanera', "assets/costanera.JPG");
+            this.getGame().load.image('costanera', 'assets/costanera.JPG');
+            this.getGame().load.image('gameover', 'assets/gameover.png');
             //Agregamos un comentario para probar subir cambios a GIT desde el editor
             //hacemos un cambio en el archivo
         };
@@ -116,43 +141,53 @@ var JuegoCostanera;
             logo.height = this.getGame().height;
             logo.width = this.getGame().width;
             this.getGame().physics.startSystem(Phaser.Physics.ARCADE);
-            this.getGame().physics.arcade.gravity.y = 250;
-            var personaje = this.getGame().add.sprite(100, 200, 'player');
-            personaje.height = 150;
-            personaje.width = 75;
+            this.getGame().time.desiredFps = 30;
+            this.getGame().physics.arcade.gravity.y = 200;
+            //Personaje
+            var personaje = new JuegoCostanera.Personaje(this.getGame(), this.getGame().world.centerX, this.getGame().world.top, 'player');
             this.setPersonaje(personaje);
-            this.getGame().physics.enable(this.getPersonaje(), Phaser.Physics.ARCADE);
-            this.getPersonaje().body.collideWorldBounds = true;
-            this.getPersonaje().body.gravity.y = 500;
+            //mover		
             this.setCursores(this.getGame().input.keyboard.createCursorKeys());
             this.setSaltarBtn(this.getGame().input.keyboard.addKey(Phaser.Keyboard.SPACEBAR));
             //Logo
-            this.setLogo(this.getGame().add.sprite(300, 50, 'logo'));
+            var logo = this.getGame().add.sprite(300, 50, 'logo');
+            this.setLogo(logo);
             this.getLogo().name = 'logo';
-            //this.getLogo().body.gravity.y = 500;
             this.getGame().physics.enable(this.getLogo(), Phaser.Physics.ARCADE);
-            logo.inputEnabled = true;
-            logo.events.onInputDown.add(this.listener, this);
-            //this.getLogo().body.velocity.y = 10;
-            //  This adjusts the collision body size.
-            //  220x10 is the new width/height.
-            //  See the offset bounding box for another example.
             this.getLogo().body.setSize(10, 10, 0, 0);
-            //emitter
+            //click events
+            logo.inputEnabled = true;
+            //logo.events.onInputDown.add(this.listener, this);
+            //emitter Logo
             var emitter = this.getGame().add.emitter(this.getGame().world.centerX, 5, 5);
             this.setEmitter(emitter);
             this.getEmitter().width = this.getGame().world.width;
             this.getEmitter().makeParticles('logo', null, 1, true);
-            // emitter.minParticleScale = 0.1;
-            // emitter.maxParticleScale = 0.5;
-            this.getEmitter().setYSpeed(100, 200);
+            this.getEmitter().setYSpeed(500, 600);
             this.getEmitter().setXSpeed(-5, 5);
             this.getEmitter().start(false, 1600, 1, 0);
+            //emitter bonus
+            var emitter = this.getGame().add.emitter(this.getGame().world.centerX, 5, 5);
+            this.setEmitterBonus(emitter);
+            this.getEmitterBonus().width = this.getGame().world.width;
+            this.getEmitterBonus().makeParticles('bonus', null, 1, true);
+            this.getEmitterBonus().setYSpeed(100, 200);
+            this.getEmitterBonus().setXSpeed(-5, 5);
+            this.getEmitterBonus().start(false, 1600, 1, 0);
+            //  Puntos
+            var scoreString = 'Puntos: ';
+            var scoreText = this.getGame().add.text(10, 10, scoreString + this.getPersonaje().getPuntos(), { font: '34px Arial', fill: '#fff' });
+            this.setTextoPuntos(scoreText);
+            //  Vidas
+            var vidasString = 'Vidas: ';
+            var vidasText = this.getGame().add.text(this.getGame().world.width - 140, 10, vidasString + this.getPersonaje().getVidas(), { font: '34px Arial', fill: '#fff' });
+            this.setTextoVidas(vidasText);
         };
         Costanera.prototype.update = function () {
             // this.game.physics.arcade.collide(this.player, platforms);
             //this.getGame().physics.arcade.collide(this.getLogo(), this.getPersonaje(), this.collisionHandler, null, this);
             this.getGame().physics.arcade.collide(this.getEmitter(), this.getPersonaje(), this.collisionHandler, null, this);
+            this.getGame().physics.arcade.collide(this.getEmitterBonus(), this.getPersonaje(), this.collisionBonus, null, this);
             this.getPersonaje().body.velocity.x = 0;
             if (this.getCursores().left.isDown) {
                 this.getPersonaje().body.velocity.x = -500;
@@ -176,15 +211,23 @@ var JuegoCostanera;
                 console.log(this.getDobleSalto, "Segundo salto");
             }
         };
-        Costanera.prototype.collisionHandler = function (objetos, personaje) {
-            // this.getGame().stage.backgroundColor = '#992d2d';
-            // this.getPersonaje().body.velocity.y = -800;
-            objetos.kill();
+        Costanera.prototype.collisionHandler = function (logo, personaje) {
             personaje.kill();
-            personaje.revive();
+            //  Reduce the lives
+            if (this.getPersonaje().getVidas() > 0) {
+                this.getPersonaje().setVidas(this.getPersonaje().getVidas() - 1);
+                this.getTextoVidas().text = "Vidas: " + this.getPersonaje().getVidas().toString();
+            }
+            else {
+                logo.kill();
+                var gameOver = this.getGame().add.sprite(this.getGame().world.centerX - 250, this.getGame().world.centerY - 100, 'gameover');
+            }
         };
-        Costanera.prototype.listener = function () {
-            this.getPersonaje().revive();
+        Costanera.prototype.collisionBonus = function (hamburguesas, personaje) {
+            personaje.kill();
+            //Increase the score
+            this.getPersonaje().setPuntos(this.getPersonaje().getPuntos() + 20);
+            this.getTextoPuntos().text = "Puntos: " + this.getPersonaje().getPuntos().toString();
         };
         return Costanera;
     }());
