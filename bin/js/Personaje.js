@@ -17,7 +17,7 @@ var JuegoCostanera;
         function Personaje(game, x, y, frame) {
             var _this = _super.call(this, game, x, y, frame) || this;
             _this.height = 200;
-            _this.width = 100;
+            _this.width = 166;
             game.physics.enable(_this, Phaser.Physics.ARCADE);
             _this.body.collideWorldBounds = true;
             _this.body.gravity.y = 500;
@@ -28,9 +28,16 @@ var JuegoCostanera;
             //this.setOrientacion('left');  
             _this.setPuntos(0);
             _this.setVidas(3);
+            _this.setPlayerBonus(0);
             game.add.existing(_this);
             return _this;
         }
+        Personaje.prototype.getPlayerBonus = function () {
+            return this.bonus;
+        };
+        Personaje.prototype.setPlayerBonus = function (value) {
+            this.bonus = value;
+        };
         Personaje.prototype.getPuntos = function () {
             return this.puntos;
         };

@@ -227,7 +227,13 @@ var JuegoCostanera;
             personaje.kill();
             //Increase the score
             this.getPersonaje().setPuntos(this.getPersonaje().getPuntos() + 20);
+            this.getPersonaje().setPlayerBonus(this.getPersonaje().getPlayerBonus() + 20);
             this.getTextoPuntos().text = "Puntos: " + this.getPersonaje().getPuntos().toString();
+            if (this.getPersonaje().getPlayerBonus() == 200) {
+                this.getPersonaje().setVidas(this.getPersonaje().getVidas() + 1);
+                this.getTextoVidas().text = "Vidas: " + this.getPersonaje().getVidas().toString();
+                this.getPersonaje().setPlayerBonus(0);
+            }
         };
         return Costanera;
     }());
