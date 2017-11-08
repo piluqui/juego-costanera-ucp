@@ -16,7 +16,10 @@ module JuegoCostanera {
 	emitter: Phaser.Particles.Arcade.Emitter;
 	emitterBonus: Phaser.Particles.Arcade.Emitter;
 	textoVidas: Phaser.Text;
-	textoPuntos: Phaser.Text;	
+	textoPuntos: Phaser.Text;
+	jump: boolean;
+	left: boolean;
+	right: boolean;
 //--------------------setters y getters --------------------------------------
 	
 	
@@ -120,6 +123,30 @@ module JuegoCostanera {
 		this.textoVidas = value;
 	}
 
+	setJump(value: boolean ){
+		this.jump = value;
+	}
+
+	getJump(){
+		return this.jump;
+	}
+
+	setLeft(value: boolean ){
+		this.left = value;
+	}
+
+	getLeft(){
+		return this.left;
+	}
+
+	setRight(value: boolean ){
+		this.right = value;
+	}
+
+	getRight(){
+		return this.right;
+	}
+
 
 	constructor(ancho: number,alto:number){		
 		this.setGame(new Phaser.Game( ancho, alto, Phaser.CANVAS, 'content', { 
@@ -153,8 +180,19 @@ module JuegoCostanera {
 			getTextoPuntos: this.getTextoPuntos,
 			setTextoPuntos: this.setTextoPuntos,
 			getTextoVidas: this.getTextoVidas,
-			setTextoVidas: this.setTextoVidas
-			//listener: this.listener
+			setTextoVidas: this.setTextoVidas,
+			setJump: this.setJump,
+			getJump: this.getJump,
+			setLeft: this.setLeft,
+			getLeft: this.getLeft,
+			setRight: this.setRight,
+			getRight: this.getRight,
+			goFull:this.goFull,
+			listener: this.listener,
+			listenerJump: this.listenerJump,
+			listenerLeft: this.listenerLeft,
+			listenerRight: this.listenerRight,
+			
 		} ));
 	}
 	
@@ -168,6 +206,11 @@ module JuegoCostanera {
 		
 		//Agregamos un comentario para probar subir cambios a GIT desde el editor
 		//hacemos un cambio en el archivo
+
+		//Botones
+		this.getGame().load.spritesheet('buttonvertical', 'assets/button-vertical.png',64,64);
+		this.getGame().load.spritesheet('buttonhorizontal', 'assets/button-horizontal.png',96,64);
+		this.getGame().load.spritesheet('buttonjump', 'assets/button-round.png',96,96);
 		
 	}
 	
@@ -178,7 +221,10 @@ module JuegoCostanera {
 		// centering in that last sentence
 
 		//Seteamos la imagen del juego en la posicion '0,0'
-	    //y el ancho y alto de la misma según el tamaño de la ventana actual
+		//y el ancho y alto de la misma según el tamaño de la ventana actual
+		
+		if (!this.getGame().device.desktop){ this.getGame().input.onDown.add(this.goFull, this); }
+
 		var logo = this.getGame().add.sprite( this.getGame().world.centerX, this.getGame().world.centerY, 'costanera' );
 		logo.x = 0;
 		logo.y = 0;
@@ -239,8 +285,33 @@ module JuegoCostanera {
  		//  Vidas
  		var vidasString = 'Vidas: ';
  		var vidasText = this.getGame().add.text(this.getGame().world.width - 140, 10, vidasString + this.getPersonaje().getVidas(), { font: '34px Arial', fill: '#fff' });
- 		this.setTextoVidas(vidasText);
+		this.setTextoVidas(vidasText);
 
+		// create our virtual game controller buttons 
+		//Boton de salto
+		var buttonjump = this.getGame().add.button(this.getGame().world.width - 140, this.getGame().world.height - 140, 'buttonjump', null, this, 0, 1, 0, 1);  //game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame
+		buttonjump.fixedToCamera = true;  //our buttons should stay on the same place  
+		buttonjump.events.onInputOver.add(this.listenerJump,this,0,true);
+		buttonjump.events.onInputOut.add(this.listenerJump,this,0,false);
+		buttonjump.events.onInputDown.add(this.listenerJump,this,0,true);
+		buttonjump.events.onInputUp.add(this.listenerJump,this,0,false);
+			
+		//Boton izquierda
+		var buttonleft = this.getGame().add.button(30, this.getGame().world.height	- 140, 'buttonhorizontal', null, this, 0, 1, 0, 1);
+		buttonleft.fixedToCamera = true;
+		buttonleft.events.onInputOver.add(this.listenerLeft,this,0,true);
+		buttonleft.events.onInputOut.add(this.listenerLeft,this,0,false);
+		buttonleft.events.onInputDown.add(this.listenerLeft,this,0,true);
+		buttonleft.events.onInputUp.add(this.listenerLeft,this,0,false);
+		
+		//Boton derecha
+		var buttonright = this.getGame().add.button(190, this.getGame().world.height - 140, 'buttonhorizontal', null, this, 0, 1, 0, 1);
+		buttonright.fixedToCamera = true;
+		buttonright.events.onInputOver.add(this.listenerRight,this,0,true);
+		buttonright.events.onInputOut.add(this.listenerRight,this,0,false);
+		buttonright.events.onInputDown.add(this.listenerRight,this,0,true);
+		buttonright.events.onInputUp.add(this.listenerRight,this,0,false);
+	
 
 	}
 
@@ -253,36 +324,43 @@ module JuegoCostanera {
 			this.getGame().physics.arcade.collide(this.getEmitterBonus(),this.getPersonaje(),this.collisionBonus,null, this);
 	
 			this.getPersonaje().body.velocity.x = 0;
-
-
-		
-			if (this.getCursores().left.isDown)
+			if (this.getCursores().left.isDown || this.getLeft())
 			{
 				this.getPersonaje().body.velocity.x = -500;
+				if (this.getPersonaje().getOrientacion() != 'left'){
+						this.getPersonaje().animations.play('left');
+						this.getPersonaje().setOrientacion('left');
+				}
 			}
-			else if (this.getCursores().right.isDown)
-			{
+			else if (this.getCursores().right.isDown || this.getRight()){
 				this.getPersonaje().body.velocity.x = 500;
+				if (this.getPersonaje().getOrientacion() != 'right'){
+						this.getPersonaje().animations.play('right');
+						this.getPersonaje().setOrientacion('right');
+				}
+			} else {
+				if (this.getPersonaje().getOrientacion() != 'idle'){
+						this.getPersonaje().animations.stop();
+				
+						if (this.getPersonaje().getOrientacion() == 'left'){
+							this.getPersonaje().frame = 0;
+						}
+						else{
+							this.getPersonaje().frame = 5;
+						}
+						this.getPersonaje().setOrientacion('idle')
+				}
 			}
-		
-			if (this.getSaltarBtn().isDown && (this.getPersonaje().body.onFloor() || this.getPersonaje().body.touching.down))
+
+			if ((this.getSaltarBtn().isDown || this.getJump()) && (this.getPersonaje().body.onFloor()))
 			{
-				this.getPersonaje().body.velocity.y = -400;
+				this.getPersonaje().body.velocity.y = -600;
+			}
 		
-			}
-			if (this.getSaltarBtn().isDown && this.getPersonaje().body.onFloor()) {
-			     this.getPersonaje().body.velocity.y = -400;
-			     this.setDobleSalto(1);
-			     this.getSaltarBtn().isDown = false;
-			       console.log(this.getSaltarBtn(), "Primer Salto");
-			}
-			if (this.getSaltarBtn().isDown && this.getDobleSalto() == 1) {
-			     this.getPersonaje().body.velocity.y = -400;
-			     this.setDobleSalto(2);
-			     this.getSaltarBtn().isDown = false;
-			       console.log(this.getDobleSalto, "Segundo salto");
-			}
+			if (this.getGame().input.totalActivePointers == 0 && !this.getGame().input.activePointer.isMouse){ this.setRight(false); this.setLeft(false); this.setJump(false)} 
+	
 	}
+
 
 
 		collisionHandler (logo, personaje){
@@ -303,17 +381,35 @@ module JuegoCostanera {
 		collisionBonus (hamburguesas, personaje){
 			personaje.kill();
 			//Increase the score
-		this.getPersonaje().setPuntos(this.getPersonaje().getPuntos() + 20);
-		this.getPersonaje().setPlayerBonus(this.getPersonaje().getPlayerBonus() + 20);
-		this.getTextoPuntos().text = "Puntos: " + this.getPersonaje().getPuntos().toString();
+			this.getPersonaje().setPuntos(this.getPersonaje().getPuntos() + 20);
+			this.getPersonaje().setPlayerBonus(this.getPersonaje().getPlayerBonus() + 20);
+			this.getTextoPuntos().text = "Puntos: " + this.getPersonaje().getPuntos().toString();
 
-		if(this.getPersonaje().getPlayerBonus() == 200 ){
-			this.getPersonaje().setVidas(this.getPersonaje().getVidas() + 1);
-			this.getTextoVidas().text = "Vidas: " + this.getPersonaje().getVidas().toString();
-			this.getPersonaje().setPlayerBonus(0);
+			if(this.getPersonaje().getPlayerBonus() == 200 ){
+				this.getPersonaje().setVidas(this.getPersonaje().getVidas() + 1);
+				this.getTextoVidas().text = "Vidas: " + this.getPersonaje().getVidas().toString();
+				this.getPersonaje().setPlayerBonus(0);
+			}
+		}
+
+		goFull() { this.getGame().scale.startFullScreen(false);}
+		
+		listener (){
+			this.getPersonaje().revive()
+		}
+		
+		listenerJump(key,arg,arg2){
+			this.setJump(arg2);
+		}
+		
+		listenerLeft(key,arg,arg2){
+			this.setLeft(arg2);
+		}
+		
+		listenerRight(key,arg,arg2){
+			this.setRight(arg2);
 		}
 	}
-}
 
 
 
