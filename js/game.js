@@ -24,19 +24,18 @@ var JuegoCostanera;
 (function (JuegoCostanera) {
     var Personaje = /** @class */ (function (_super) {
         __extends(Personaje, _super);
-        //orientacion: string;
         function Personaje(game, x, y, frame) {
             var _this = _super.call(this, game, x, y, frame) || this;
-            _this.height = 400;
-            _this.width = 332;
+            _this.height = 200;
+            _this.width = 166;
             game.physics.enable(_this, Phaser.Physics.ARCADE);
             _this.body.collideWorldBounds = true;
             _this.body.gravity.y = 500;
             _this.body.setSize(780, 705);
-            //this.animations.add('left', [0, 1, 2, 3], 10, true);
-            //this.animations.add('turn', [4], 20, true);
-            // this.animations.add('right', [5, 6, 7, 8], 10, true);
-            //this.setOrientacion('left');  
+            _this.animations.add('left', [0, 1, 2, 3], 10, true);
+            _this.animations.add('turn', [4], 20, true);
+            _this.animations.add('right', [5, 6, 7, 8], 10, true);
+            _this.setOrientacion('left');
             _this.setPuntos(0);
             _this.setVidas(3);
             _this.setPlayerBonus(0);
@@ -55,17 +54,17 @@ var JuegoCostanera;
         Personaje.prototype.setPuntos = function (value) {
             this.puntos = value;
         };
-        //setOrientacion(value: string){
-        // this.orientacion = value;
-        //}
-        //getOrientacion(){
-        // return this.orientacion;
-        //}
         Personaje.prototype.getVidas = function () {
             return this.vidas;
         };
         Personaje.prototype.setVidas = function (value) {
             this.vidas = value;
+        };
+        Personaje.prototype.setOrientacion = function (value) {
+            this.orientacion = value;
+        };
+        Personaje.prototype.getOrientacion = function () {
+            return this.orientacion;
         };
         return Personaje;
     }(Phaser.Sprite));
@@ -109,8 +108,18 @@ var JuegoCostanera;
                 getTextoPuntos: this.getTextoPuntos,
                 setTextoPuntos: this.setTextoPuntos,
                 getTextoVidas: this.getTextoVidas,
-                setTextoVidas: this.setTextoVidas
-                //listener: this.listener
+                setTextoVidas: this.setTextoVidas,
+                setJump: this.setJump,
+                getJump: this.getJump,
+                setLeft: this.setLeft,
+                getLeft: this.getLeft,
+                setRight: this.setRight,
+                getRight: this.getRight,
+                goFull: this.goFull,
+                listener: this.listener,
+                listenerJump: this.listenerJump,
+                listenerLeft: this.listenerLeft,
+                listenerRight: this.listenerRight,
             }));
         }
         //--------------------setters y getters --------------------------------------
@@ -192,6 +201,24 @@ var JuegoCostanera;
         Costanera.prototype.setTextoVidas = function (value) {
             this.textoVidas = value;
         };
+        Costanera.prototype.setJump = function (value) {
+            this.jump = value;
+        };
+        Costanera.prototype.getJump = function () {
+            return this.jump;
+        };
+        Costanera.prototype.setLeft = function (value) {
+            this.left = value;
+        };
+        Costanera.prototype.getLeft = function () {
+            return this.left;
+        };
+        Costanera.prototype.setRight = function (value) {
+            this.right = value;
+        };
+        Costanera.prototype.getRight = function () {
+            return this.right;
+        };
         Costanera.prototype.preload = function () {
             this.getGame().load.image('logo', 'assets/logo.png');
             this.getGame().load.image('bonus', 'assets/hamburger.png');
@@ -200,6 +227,10 @@ var JuegoCostanera;
             this.getGame().load.image('gameover', 'assets/gameover.png');
             //Agregamos un comentario para probar subir cambios a GIT desde el editor
             //hacemos un cambio en el archivo
+            //Botones
+            this.getGame().load.spritesheet('buttonvertical', 'assets/button-vertical.png', 64, 64);
+            this.getGame().load.spritesheet('buttonhorizontal', 'assets/button-horizontal.png', 96, 64);
+            this.getGame().load.spritesheet('buttonjump', 'assets/button-round.png', 96, 96);
         };
         Costanera.prototype.create = function () {
             // add the 'logo' sprite to the game, position it in the
@@ -208,6 +239,9 @@ var JuegoCostanera;
             // centering in that last sentence
             //Seteamos la imagen del juego en la posicion '0,0'
             //y el ancho y alto de la misma según el tamaño de la ventana actual
+            if (!this.getGame().device.desktop) {
+                this.getGame().input.onDown.add(this.goFull, this);
+            }
             var logo = this.getGame().add.sprite(this.getGame().world.centerX, this.getGame().world.centerY, 'costanera');
             logo.x = 0;
             logo.y = 0;
@@ -255,6 +289,28 @@ var JuegoCostanera;
             var vidasString = 'Vidas: ';
             var vidasText = this.getGame().add.text(this.getGame().world.width - 140, 10, vidasString + this.getPersonaje().getVidas(), { font: '34px Arial', fill: '#fff' });
             this.setTextoVidas(vidasText);
+            // create our virtual game controller buttons 
+            //Boton de salto
+            var buttonjump = this.getGame().add.button(this.getGame().world.width - 140, this.getGame().world.height - 140, 'buttonjump', null, this, 0, 1, 0, 1); //game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame
+            buttonjump.fixedToCamera = true; //our buttons should stay on the same place  
+            buttonjump.events.onInputOver.add(this.listenerJump, this, 0, true);
+            buttonjump.events.onInputOut.add(this.listenerJump, this, 0, false);
+            buttonjump.events.onInputDown.add(this.listenerJump, this, 0, true);
+            buttonjump.events.onInputUp.add(this.listenerJump, this, 0, false);
+            //Boton izquierda
+            var buttonleft = this.getGame().add.button(30, this.getGame().world.height - 140, 'buttonhorizontal', null, this, 0, 1, 0, 1);
+            buttonleft.fixedToCamera = true;
+            buttonleft.events.onInputOver.add(this.listenerLeft, this, 0, true);
+            buttonleft.events.onInputOut.add(this.listenerLeft, this, 0, false);
+            buttonleft.events.onInputDown.add(this.listenerLeft, this, 0, true);
+            buttonleft.events.onInputUp.add(this.listenerLeft, this, 0, false);
+            //Boton derecha
+            var buttonright = this.getGame().add.button(190, this.getGame().world.height - 140, 'buttonhorizontal', null, this, 0, 1, 0, 1);
+            buttonright.fixedToCamera = true;
+            buttonright.events.onInputOver.add(this.listenerRight, this, 0, true);
+            buttonright.events.onInputOut.add(this.listenerRight, this, 0, false);
+            buttonright.events.onInputDown.add(this.listenerRight, this, 0, true);
+            buttonright.events.onInputUp.add(this.listenerRight, this, 0, false);
         };
         Costanera.prototype.update = function () {
             // this.game.physics.arcade.collide(this.player, platforms);
@@ -262,26 +318,39 @@ var JuegoCostanera;
             this.getGame().physics.arcade.collide(this.getEmitter(), this.getPersonaje(), this.collisionHandler, null, this);
             this.getGame().physics.arcade.collide(this.getEmitterBonus(), this.getPersonaje(), this.collisionBonus, null, this);
             this.getPersonaje().body.velocity.x = 0;
-            if (this.getCursores().left.isDown) {
+            if (this.getCursores().left.isDown || this.getLeft()) {
                 this.getPersonaje().body.velocity.x = -500;
+                if (this.getPersonaje().getOrientacion() != 'left') {
+                    this.getPersonaje().animations.play('left');
+                    this.getPersonaje().setOrientacion('left');
+                }
             }
-            else if (this.getCursores().right.isDown) {
+            else if (this.getCursores().right.isDown || this.getRight()) {
                 this.getPersonaje().body.velocity.x = 500;
+                if (this.getPersonaje().getOrientacion() != 'right') {
+                    this.getPersonaje().animations.play('right');
+                    this.getPersonaje().setOrientacion('right');
+                }
             }
-            if (this.getSaltarBtn().isDown && (this.getPersonaje().body.onFloor() || this.getPersonaje().body.touching.down)) {
-                this.getPersonaje().body.velocity.y = -400;
+            else {
+                if (this.getPersonaje().getOrientacion() != 'idle') {
+                    this.getPersonaje().animations.stop();
+                    if (this.getPersonaje().getOrientacion() == 'left') {
+                        this.getPersonaje().frame = 0;
+                    }
+                    else {
+                        this.getPersonaje().frame = 5;
+                    }
+                    this.getPersonaje().setOrientacion('idle');
+                }
             }
-            if (this.getSaltarBtn().isDown && this.getPersonaje().body.onFloor()) {
-                this.getPersonaje().body.velocity.y = -400;
-                this.setDobleSalto(1);
-                this.getSaltarBtn().isDown = false;
-                console.log(this.getSaltarBtn(), "Primer Salto");
+            if ((this.getSaltarBtn().isDown || this.getJump()) && (this.getPersonaje().body.onFloor())) {
+                this.getPersonaje().body.velocity.y = -600;
             }
-            if (this.getSaltarBtn().isDown && this.getDobleSalto() == 1) {
-                this.getPersonaje().body.velocity.y = -400;
-                this.setDobleSalto(2);
-                this.getSaltarBtn().isDown = false;
-                console.log(this.getDobleSalto, "Segundo salto");
+            if (this.getGame().input.totalActivePointers == 0 && !this.getGame().input.activePointer.isMouse) {
+                this.setRight(false);
+                this.setLeft(false);
+                this.setJump(false);
             }
         };
         Costanera.prototype.collisionHandler = function (logo, personaje) {
@@ -307,6 +376,19 @@ var JuegoCostanera;
                 this.getTextoVidas().text = "Vidas: " + this.getPersonaje().getVidas().toString();
                 this.getPersonaje().setPlayerBonus(0);
             }
+        };
+        Costanera.prototype.goFull = function () { this.getGame().scale.startFullScreen(false); };
+        Costanera.prototype.listener = function () {
+            this.getPersonaje().revive();
+        };
+        Costanera.prototype.listenerJump = function (key, arg, arg2) {
+            this.setJump(arg2);
+        };
+        Costanera.prototype.listenerLeft = function (key, arg, arg2) {
+            this.setLeft(arg2);
+        };
+        Costanera.prototype.listenerRight = function (key, arg, arg2) {
+            this.setRight(arg2);
         };
         return Costanera;
     }());

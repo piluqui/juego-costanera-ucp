@@ -13,7 +13,6 @@ var JuegoCostanera;
 (function (JuegoCostanera) {
     var Personaje = /** @class */ (function (_super) {
         __extends(Personaje, _super);
-        //orientacion: string;
         function Personaje(game, x, y, frame) {
             var _this = _super.call(this, game, x, y, frame) || this;
             _this.height = 200;
@@ -22,10 +21,10 @@ var JuegoCostanera;
             _this.body.collideWorldBounds = true;
             _this.body.gravity.y = 500;
             _this.body.setSize(780, 705);
-            //this.animations.add('left', [0, 1, 2, 3], 10, true);
-            //this.animations.add('turn', [4], 20, true);
-            // this.animations.add('right', [5, 6, 7, 8], 10, true);
-            //this.setOrientacion('left');  
+            _this.animations.add('left', [0, 1, 2, 3], 10, true);
+            _this.animations.add('turn', [4], 20, true);
+            _this.animations.add('right', [5, 6, 7, 8], 10, true);
+            _this.setOrientacion('left');
             _this.setPuntos(0);
             _this.setVidas(3);
             _this.setPlayerBonus(0);
@@ -44,17 +43,17 @@ var JuegoCostanera;
         Personaje.prototype.setPuntos = function (value) {
             this.puntos = value;
         };
-        //setOrientacion(value: string){
-        // this.orientacion = value;
-        //}
-        //getOrientacion(){
-        // return this.orientacion;
-        //}
         Personaje.prototype.getVidas = function () {
             return this.vidas;
         };
         Personaje.prototype.setVidas = function (value) {
             this.vidas = value;
+        };
+        Personaje.prototype.setOrientacion = function (value) {
+            this.orientacion = value;
+        };
+        Personaje.prototype.getOrientacion = function () {
+            return this.orientacion;
         };
         return Personaje;
     }(Phaser.Sprite));

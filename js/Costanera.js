@@ -246,26 +246,11 @@ var JuegoCostanera;
             this.getGame().physics.arcade.collide(this.getEmitter(), this.getPersonaje(), this.collisionHandler, null, this);
             this.getGame().physics.arcade.collide(this.getEmitterBonus(), this.getPersonaje(), this.collisionBonus, null, this);
             this.getPersonaje().body.velocity.x = 0;
-            if (this.getCursores().left.isDown) {
+            if (this.getCursores().left.isDown || this.getLeft()) {
                 this.getPersonaje().body.velocity.x = -500;
             }
-            else if (this.getCursores().right.isDown) {
+            else if (this.getCursores().right.isDown || this.getRight()) {
                 this.getPersonaje().body.velocity.x = 500;
-            }
-            if (this.getSaltarBtn().isDown && (this.getPersonaje().body.onFloor() || this.getPersonaje().body.touching.down)) {
-                this.getPersonaje().body.velocity.y = -400;
-            }
-            if (this.getSaltarBtn().isDown && this.getPersonaje().body.onFloor()) {
-                this.getPersonaje().body.velocity.y = -400;
-                this.setDobleSalto(1);
-                this.getSaltarBtn().isDown = false;
-                console.log(this.getSaltarBtn(), "Primer Salto");
-            }
-            if (this.getSaltarBtn().isDown && this.getDobleSalto() == 1) {
-                this.getPersonaje().body.velocity.y = -400;
-                this.setDobleSalto(2);
-                this.getSaltarBtn().isDown = false;
-                console.log(this.getDobleSalto, "Segundo salto");
             }
             if ((this.getSaltarBtn().isDown || this.getJump()) && (this.getPersonaje().body.onFloor())) {
                 this.getPersonaje().body.velocity.y = -600;

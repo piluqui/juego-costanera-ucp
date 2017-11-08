@@ -327,31 +327,12 @@ module JuegoCostanera {
 			if (this.getCursores().left.isDown || this.getLeft())
 			{
 				this.getPersonaje().body.velocity.x = -500;
-				if (this.getPersonaje().getOrientacion() != 'left'){
-						this.getPersonaje().animations.play('left');
-						this.getPersonaje().setOrientacion('left');
-				}
 			}
 			else if (this.getCursores().right.isDown || this.getRight()){
 				this.getPersonaje().body.velocity.x = 500;
-				if (this.getPersonaje().getOrientacion() != 'right'){
-						this.getPersonaje().animations.play('right');
-						this.getPersonaje().setOrientacion('right');
-				}
-			} else {
-				if (this.getPersonaje().getOrientacion() != 'idle'){
-						this.getPersonaje().animations.stop();
-				
-						if (this.getPersonaje().getOrientacion() == 'left'){
-							this.getPersonaje().frame = 0;
-						}
-						else{
-							this.getPersonaje().frame = 5;
-						}
-						this.getPersonaje().setOrientacion('idle')
-				}
 			}
-
+						
+			
 			if ((this.getSaltarBtn().isDown || this.getJump()) && (this.getPersonaje().body.onFloor()))
 			{
 				this.getPersonaje().body.velocity.y = -600;
